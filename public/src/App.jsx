@@ -3,10 +3,8 @@ import React from 'react';
 import { Routes, Route, useLocation, BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-// Remove missing page imports
-// import ProjectManagementPage from './pages/ProjectManagementPage';
+import ProjectManagementPage from './pages/ProjectManagementPage';
 import LoginPage from './pages/LoginPage';
-// import FinalLogin from './pages/Finallogin';
 import DashboardPage from './pages/DashboardPage';
 import UserManagementPage from './pages/UserManagementPage';
 import UserProfilePage from './pages/UserProfilePage';
@@ -29,7 +27,7 @@ const AppContent = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/user-management" element={<UserManagementPage />} />
           <Route path="/profile" element={<UserProfilePage />} />
-          <Route path="/project-management" element={<NotFound />} />
+          <Route path="/project-management" element={<ProjectManagementPage />} />
           <Route path="/client-management/*" element={<ClientManagementPage />} />
           <Route path="/projects" element={<NotFound />} />
           <Route path="/test" element={<Test />} />
