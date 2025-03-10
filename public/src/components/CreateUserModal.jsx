@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createUser } from '../store/userStore';
+import useUserStore from '../store/userStore';
 
 const CreateUserModal = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState('');
@@ -9,13 +8,12 @@ const CreateUserModal = ({ isOpen, onClose }) => {
   const [role, setRole] = useState('User'); // Default role
   const [name, setName] = useState(''); // New state for name
   const [password, setPassword] = useState(''); // New state for password
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state) => state.users);
+  const { createUser, error } = useUserStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = { username, name, email, contact_number: contactNumber, password, role }; // Updated to include password
-    await dispatch(createUser(userData));
+    await createUser(userData);
     onClose(); // Close the modal after submission
   };
 
@@ -91,7 +89,7 @@ const CreateUserModal = ({ isOpen, onClose }) => {
           </div>
           <div className="flex justify-end">
             <button type="button" onClick={onClose} className="mr-2 bg-gray-300 text-gray-800 px-4 py-2 rounded">Cancel</button>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded" disabled={isLoading}>Create User</button>
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Create User</button>
           </div>
         </form>
       </div>
@@ -99,4 +97,4 @@ const CreateUserModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default CreateUserModal;
+export default CreateUserModal; 
