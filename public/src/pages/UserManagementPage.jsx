@@ -3,11 +3,14 @@ import useUserStore from '../store/userStore';
 import { useUser } from '../context/UserContext';
 import { Link } from 'react-router-dom';
 import CreateUserModal from '../components/CreateUserModal';
+import EditUserModal from '../components/EditUserModal';
 
 const UserManagementPage = () => {
   const { user } = useUser();
   const { users, fetchUsers, isLoading, error, deleteUser } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
@@ -26,6 +29,11 @@ const UserManagementPage = () => {
 
   const handleUserCreated = () => {
     fetchUsers(); // Refresh the user list after creation
+  };
+
+  // Add the missing handleUserUpdated function
+  const handleUserUpdated = () => {
+    fetchUsers(); // Refresh the user list after update
   };
 
   // Filter users based on search term
@@ -166,15 +174,18 @@ const UserManagementPage = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-3">
-                        <Link 
-                          to={`/edit-user/${user._id}`} 
+                        <button 
+                          onClick={() => {
+                            setUserToEdit(user);
+                            setIsEditModalOpen(true);
+                          }}
                           className="text-blue-600 hover:text-blue-900 inline-flex items-center hover:bg-blue-50 px-2 py-1 rounded transition-colors"
                         >
                           <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                           Edit
-                        </Link>
+                        </button>
                         {deleteConfirmId === user._id ? (
                           <div className="inline-flex items-center space-x-2 bg-red-50 px-2 py-1 rounded border border-red-100">
                             <button 
@@ -303,6 +314,17 @@ const UserManagementPage = () => {
       </div>
 
       <CreateUserModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onUserCreated={handleUserCreated} />
+      {userToEdit && (
+        <EditUserModal 
+          isOpen={isEditModalOpen} 
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setUserToEdit(null);
+          }} 
+          user={userToEdit}
+          onUserUpdated={handleUserUpdated} 
+        />
+      )}
     </div>
   );
 };

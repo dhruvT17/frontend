@@ -45,9 +45,18 @@ const useUserStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.put(`/users/${userId}`, userData);
-      return response.data; // Return the response for further handling
+      
+      set((state) => ({
+        users: state.users.map(user => 
+          user._id === userId ? { ...user, ...response.data.data } : user
+        ),
+        isLoading: false
+      }));
+      
+      return response.data;
     } catch (error) {
       set({ error: error.response?.data?.message || 'Failed to update user', isLoading: false });
+      throw error;
     }
   },
 
@@ -56,7 +65,7 @@ const useUserStore = create((set) => ({
     try {
       await axios.delete(`/users/${userId}`);
       set((state) => ({
-        users: state.users.filter((user) => user.id !== userId),
+        users: state.users.filter((user) => user._id !== userId),
         isLoading: false,
       }));
     } catch (error) {
@@ -65,4 +74,4 @@ const useUserStore = create((set) => ({
   },
 }));
 
-export default useUserStore; 
+export default useUserStore;

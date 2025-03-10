@@ -15,7 +15,7 @@ const ProjectManagementPage = () => {
     // Fetch both projects and clients when the component mounts
     dispatch(fetchProjects());
     dispatch(fetchClients());
-  }, []);  // Empty dependency array ensures this runs only once
+  }, [dispatch]);  // Added dispatch to dependency array
 
   const handleCreateProject = () => {
     setIsEditing(false);
@@ -23,9 +23,12 @@ const ProjectManagementPage = () => {
   };
 
   const handleEditProject = (project) => {
+    // Make sure we're properly setting the current project in Redux
     dispatch(setCurrentProject(project));
     setIsEditing(true);
     setShowForm(true);
+    // Prevent default behavior if this is being called from an event
+    return false;
   };
 
   const handleCloseForm = () => {
@@ -63,7 +66,12 @@ const ProjectManagementPage = () => {
           >
             ← Back to Projects
           </button>
-          <ProjectForm isEditing={isEditing} />
+          <ProjectForm 
+            isEditing={isEditing} 
+            onClose={handleCloseForm}
+            // Make sure we're passing the current project from the Redux store
+            project={useSelector(state => state.projects.currentProject)}
+          />
         </div>
       ) : (
         <div>
@@ -72,7 +80,10 @@ const ProjectManagementPage = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
           ) : (
-            <ProjectList projects={projects} onEditProject={handleEditProject} />
+            <ProjectList 
+              projects={projects} 
+              onEditProject={handleEditProject} 
+            />
           )}
         </div>
       )}
