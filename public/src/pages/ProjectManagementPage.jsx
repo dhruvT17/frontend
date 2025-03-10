@@ -8,14 +8,14 @@ import ProjectForm from '../components/project/ProjectForm';
 const ProjectManagementPage = () => {
   const dispatch = useDispatch();
   const { projects, isLoading, error } = useSelector((state) => state.projects);
+  const currentProject = useSelector(state => state.projects.currentProject);
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Fetch both projects and clients when the component mounts
     dispatch(fetchProjects());
     dispatch(fetchClients());
-  }, [dispatch]);  // Added dispatch to dependency array
+  }, [dispatch]);
 
   const handleCreateProject = () => {
     setIsEditing(false);
@@ -23,17 +23,14 @@ const ProjectManagementPage = () => {
   };
 
   const handleEditProject = (project) => {
-    // Make sure we're properly setting the current project in Redux
     dispatch(setCurrentProject(project));
     setIsEditing(true);
     setShowForm(true);
-    // Prevent default behavior if this is being called from an event
     return false;
   };
 
   const handleCloseForm = () => {
     setShowForm(false);
-    // Refresh projects when closing the form
     dispatch(fetchProjects());
   };
 
@@ -69,8 +66,7 @@ const ProjectManagementPage = () => {
           <ProjectForm 
             isEditing={isEditing} 
             onClose={handleCloseForm}
-            // Make sure we're passing the current project from the Redux store
-            project={useSelector(state => state.projects.currentProject)}
+            project={currentProject}
           />
         </div>
       ) : (
