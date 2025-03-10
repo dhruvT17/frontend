@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
-  import useAuthStore from '../store/authStore';
+import useAuthStore from '../store/authStore';
 // Adding icons import
-import { FaHome, FaUsers, FaProjectDiagram, FaBuilding, FaUser, FaTasks, FaSignOutAlt } from 'react-icons/fa';
+import { FaHome, FaUsers, FaProjectDiagram, FaBuilding, FaUser, FaTasks, FaSignOutAlt, FaCalendarAlt } from 'react-icons/fa';
+// This import isn't needed in the Sidebar component
+// import LeaveManagementPage from '../pages/LeaveManagementPage';
 
 const Sidebar = () => {
   // Use authStore directly for logout functionality
@@ -31,12 +33,14 @@ const Sidebar = () => {
     { path: '/user-management', label: 'User Management', icon: <FaUsers className="mr-3 text-xl" /> },
     { path: '/project-management', label: 'Project Management', icon: <FaProjectDiagram className="mr-3 text-xl" /> },
     { path: '/client-management', label: 'Client Management', icon: <FaBuilding className="mr-3 text-xl" /> },
+    { path: '/leave-management', label: 'Leave Management', icon: <FaCalendarAlt className="mr-3 text-xl" /> },
     // Add more admin-specific links here
   ];
 
   const userLinks = [
     { path: '/profile', label: 'Profile', icon: <FaUser className="mr-3 text-xl" /> },
     { path: '/projects', label: 'My Projects', icon: <FaTasks className="mr-3 text-xl" /> },
+    { path: '/leave-management', label: 'Leave Management', icon: <FaCalendarAlt className="mr-3 text-xl" /> },
     // Add more user-specific links here
   ];
 

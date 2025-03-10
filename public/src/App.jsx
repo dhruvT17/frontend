@@ -9,6 +9,7 @@ import DashboardPage from './pages/DashboardPage';
 import UserManagementPage from './pages/UserManagementPage';
 import UserProfilePage from './pages/UserProfilePage';
 import ClientManagementPage from './pages/ClientManagementPage';
+import LeaveManagementPage from './pages/LeaveManagementPage';
 import Test from './pages/Test';
 import NotFound from './pages/NotFound';
 import { UserProvider } from './context/UserContext';
@@ -29,6 +30,7 @@ const AppContent = () => {
           <Route path="/profile" element={<UserProfilePage />} />
           <Route path="/project-management" element={<ProjectManagementPage />} />
           <Route path="/client-management/*" element={<ClientManagementPage />} />
+          <Route path="/leave-management/*" element={<LeaveManagementPage />} />
           <Route path="/projects" element={<NotFound />} />
           <Route path="/test" element={<Test />} />
           <Route path="*" element={<NotFound />} />
