@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProjects, setCurrentProject } from '../store/projectStore';
+import { fetchProjects, setCurrentProject, clearCurrentProject } from '../store/projectStore';
 import { fetchClients } from '../store/clientStore';
 import ProjectList from '../components/project/ProjectList';
 import ProjectForm from '../components/project/ProjectForm';
@@ -8,7 +8,6 @@ import ProjectForm from '../components/project/ProjectForm';
 const ProjectManagementPage = () => {
   const dispatch = useDispatch();
   const { projects, isLoading, error } = useSelector((state) => state.projects);
-  const currentProject = useSelector(state => state.projects.currentProject);
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -18,6 +17,7 @@ const ProjectManagementPage = () => {
   }, [dispatch]);
 
   const handleCreateProject = () => {
+    dispatch(clearCurrentProject());
     setIsEditing(false);
     setShowForm(true);
   };
@@ -26,7 +26,6 @@ const ProjectManagementPage = () => {
     dispatch(setCurrentProject(project));
     setIsEditing(true);
     setShowForm(true);
-    return false;
   };
 
   const handleCloseForm = () => {
@@ -38,14 +37,12 @@ const ProjectManagementPage = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Project Management</h1>
-        {!showForm && (
-          <button
-            onClick={handleCreateProject}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Create New Project
-          </button>
-        )}
+        <button
+          onClick={handleCreateProject}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Create New Project
+        </button>
       </div>
 
       {error && (
@@ -55,34 +52,22 @@ const ProjectManagementPage = () => {
         </div>
       )}
 
-      {showForm ? (
-        <div>
-          <button
-            onClick={handleCloseForm}
-            className="mb-4 text-blue-500 hover:text-blue-700"
-          >
-            ← Back to Projects
-          </button>
-          <ProjectForm 
-            isEditing={isEditing} 
-            onClose={handleCloseForm}
-            project={currentProject}
-          />
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       ) : (
-        <div>
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
-          ) : (
-            <ProjectList 
-              projects={projects} 
-              onEditProject={handleEditProject} 
-            />
-          )}
-        </div>
+        <ProjectList 
+          projects={projects} 
+          onEditProject={handleEditProject} 
+        />
       )}
+
+      <ProjectForm 
+        isOpen={showForm}
+        onClose={handleCloseForm}
+        isEditing={isEditing}
+      />
     </div>
   );
 };
